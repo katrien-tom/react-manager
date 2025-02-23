@@ -1,0 +1,17 @@
+# https://editorconfig.org/
+
+root = true
+
+[*]
+# 编码
+utf-8 = true
+# 缩进
+indent_style = space
+# 缩进大小
+indent_size = 2
+# 行尾
+end_of_line = lf
+# 插入最终行
+insert_final_newline = true
+# 删除尾随空格
+trim_trailing_whitespace = true

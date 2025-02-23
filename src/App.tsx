@@ -1,16 +1,14 @@
 import './App.css'
+import { HashRouter } from 'react-router-dom'
+import Router from './router'
 
 function App() {
-
   return (
     <>
-      <div className="container">
-        <div className="header">
-          <h1>React Manager</h1>
-        </div>
-      </div>
+      <HashRouter>
+        <Router />
+      </HashRouter>
     </>
-  )
+  );
 }
-
 export default App
