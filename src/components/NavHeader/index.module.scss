@@ -1,0 +1,21 @@
+.navHeader{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 64px;
+    padding: 0 20px;
+}
+.navLeft{
+    display: flex;
+    align-items: center;
+}
+.navRight{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.navNickName{
+    cursor: pointer;
+    color: #000;
+}
+

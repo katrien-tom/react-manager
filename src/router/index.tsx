@@ -4,10 +4,21 @@ import Login from '@/views/common/Login';
 import Welcome from '@/views/common/Welcome';
 import NotFound from '@/views/common/NotFound';
 import Forbidden from '@/views/common/Forbidden';
+import Layout from '@/layout';
 const router = [
   {
     path: '/',
-    element: <Welcome />,
+    element: <Navigate to='/welcome' replace />,
+  },
+  {
+    path: '/',
+    element: <Layout />,
+    children: [
+      {
+        path: '/welcome',
+        element: <Welcome />,
+      },
+    ],
   },
   {
     path: '/login',
