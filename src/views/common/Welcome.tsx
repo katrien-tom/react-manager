@@ -1,5 +1,7 @@
-import storage from '@/utils/storage';
 import { Button } from 'antd';
+
+import storage from '@/utils/storage';
+
 export default function Welcome() {
   return (
     <>

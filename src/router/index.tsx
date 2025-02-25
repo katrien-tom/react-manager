@@ -1,4 +1,5 @@
 import { Navigate, useRoutes } from 'react-router-dom';
+
 import Login from '@/views/common/Login';
 import Welcome from '@/views/common/Welcome';
 import NotFound from '@/views/common/NotFound';

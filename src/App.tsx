@@ -1,14 +1,29 @@
-import './App.scss'
-import { HashRouter } from 'react-router-dom'
-import Router from './router'
+import { HashRouter } from 'react-router-dom';
+
+import { ConfigProvider, App as AntdApp } from 'antd';
+
+import Router from '@/router';
+import AntdGlobal from '@/components/AntdGlobal';
+import './App.scss';
 
 function App() {
   return (
     <>
-      <HashRouter>
-        <Router />
-      </HashRouter>
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: '#ed6c00',
+          },
+        }}
+      >
+        <AntdApp>
+          <AntdGlobal />
+          <HashRouter>
+            <Router />
+          </HashRouter>
+        </AntdApp>
+      </ConfigProvider>
     </>
   );
 }
-export default App
+export default App;

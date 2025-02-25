@@ -1,5 +1,6 @@
-import { Result, Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
+
+import { Result, Button } from 'antd';
 
 export default function Forbidden() {
   const navigate = useNavigate();
