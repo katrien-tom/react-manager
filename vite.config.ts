@@ -14,7 +14,7 @@ export default defineConfig({
     port: 8080,
     proxy: {
       '/api': {
-        target: 'http://api-driver.marsview.cc',
+        target: 'http://driver.marsview.cc/api',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },

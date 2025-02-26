@@ -1,8 +1,9 @@
 import request from '@/utils/request';
-import { LoginForm, LoginResponse } from '@/types/login';
+import { LoginForm} from '@/types/login';
 
 export default {
+  // 登录
   login: (data: LoginForm) => {
-    return request.post<LoginResponse>('/login', data, { showLoading: false });
+    return request.post<string>('/users/login', data, { showLoading: false });
   },
 };

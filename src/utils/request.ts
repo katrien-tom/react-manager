@@ -14,10 +14,6 @@ const instance = axios.create({
   timeoutErrorMessage: '请求超时, 请稍后再试',
   // 设置withCredentials（跨域安全策略）
   withCredentials: true,
-  // 设置请求头
-  headers: {
-    icode: '753498bfa7bd41ef',
-  },
 });
 
 // 添加请求拦截器
@@ -28,7 +24,7 @@ instance.interceptors.request.use(
     }
     const token = storage.get('token');
     if (token) {
-      config.headers.Authorization = 'Token::' + token;
+      config.headers.Authorization = 'Bearer ' + token;
     }
     return {
       ...config,
@@ -56,7 +52,7 @@ instance.interceptors.response.use(
     return data.data;
   },
   error => {
-    hideLoading()
+    hideLoading();
     message.error(error.message);
     return Promise.reject(error.message);
   },
