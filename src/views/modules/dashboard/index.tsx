@@ -1,11 +1,14 @@
 import { Card, Descriptions, Button } from 'antd';
 import { DescriptionsProps } from 'antd/es/descriptions';
 import styles from './index.module.scss';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import * as echarts from 'echarts';
 import { useStore } from '@/store';
+import { ReportData } from '@/types/dashboard';
+import dashboard from '@/api/dashboard';
 export default function Dashboard() {
   const { userInfo } = useStore();
+  const [reportData, setReportData] = useState<ReportData>();
   useEffect(() => {
     const lineChartDom = document.getElementById('lineChart');
     const lineChartInstance = echarts.init(lineChartDom);
@@ -114,7 +117,7 @@ export default function Dashboard() {
       radar: {
         indicator: [
           { name: '服务态度', max: 10 },
-          { name: '在线时长', max: 600 },
+          { name: '在线时长', max: 100 },
           { name: '接单率', max: 100 },
           { name: '评分', max: 5 },
           { name: '关注度', max: 10000 },
@@ -127,7 +130,7 @@ export default function Dashboard() {
           data: [
             {
               name: '司机模型诊断',
-              value: [8, 300, 80, 4, 9000],
+              value: [8, 50, 80, 4, 9000],
             },
           ],
         },
@@ -166,6 +169,13 @@ export default function Dashboard() {
       children: '技术部',
     },
   ];
+  const getReportData = async () => {
+    const data = await dashboard.getReportData();
+    setReportData(data);
+  };
+  useEffect(() => {
+    getReportData();
+  }, []);
   return (
     <div className={styles.dashboard}>
       <div className={styles.userInfo}>
@@ -177,20 +187,20 @@ export default function Dashboard() {
       </div>
       <div className={styles.report}>
         <div className={styles.card}>
-          <div className={styles.title}>数量</div>
-          <div className={styles.data}>100个</div>
+          <div className={styles.title}>司机数量</div>
+          <div className={styles.data}>{reportData?.driverCount}个</div>
         </div>
         <div className={styles.card}>
           <div className={styles.title}>总流水</div>
-          <div className={styles.data}>10000元</div>
+          <div className={styles.data}>{reportData?.totalMoney}元</div>
         </div>
         <div className={styles.card}>
           <div className={styles.title}>总订单</div>
-          <div className={styles.data}>2000单</div>
+          <div className={styles.data}>{reportData?.orderCount}单</div>
         </div>
         <div className={styles.card}>
           <div className={styles.title}>开通城市</div>
-          <div className={styles.data}>50座</div>
+          <div className={styles.data}>{reportData?.cityNum}座</div>
         </div>
       </div>
       <div className={styles.chart}>

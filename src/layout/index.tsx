@@ -1,5 +1,5 @@
 import { useNavigate, Outlet } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 
 import { Layout, Watermark } from 'antd';
 
@@ -16,14 +16,16 @@ const { Sider } = Layout;
 const App: React.FC = () => {
   const navigate = useNavigate();
   const { updateUserInfo } = useStore();
-  useEffect(() => {
-    getUserInfo();
-  }, []);
-  const getUserInfo = async () => {
+
+  const getUserInfo = useCallback(async () => {
     const data = await user.getUserInfo();
     updateUserInfo(data);
     console.log('layout-getUserInfo:', data.userName);
-  };
+  }, [updateUserInfo]);
+
+  useEffect(() => {
+    getUserInfo();
+  }, [getUserInfo]);
 
   return (
     <div className='layoutContainer'>
