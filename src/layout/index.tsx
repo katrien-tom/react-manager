@@ -11,7 +11,7 @@ import { useStore } from '@/store';
 import styles from './index.module.scss';
 import logo from '@/assets/images/logo.png';
 
-const { Sider, Content } = Layout;
+const { Sider } = Layout;
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -38,9 +38,9 @@ const App: React.FC = () => {
           </Sider>
           <Layout>
             <NavHeader />
-            <Content className={styles.content}>
+            <div className={styles.content}>
               <Outlet />
-            </Content>
+            </div>
             <NavFooter />
           </Layout>
         </Layout>

@@ -5,6 +5,7 @@ import Welcome from '@/views/common/Welcome';
 import NotFound from '@/views/common/NotFound';
 import Forbidden from '@/views/common/Forbidden';
 import Layout from '@/layout';
+import Dashboard from '@/views/modules/dashboard';
 const router = [
   {
     path: '/',
@@ -17,6 +18,10 @@ const router = [
       {
         path: '/welcome',
         element: <Welcome />,
+      },
+      {
+        path: '/dashboard',
+        element: <Dashboard />,
       },
     ],
   },
