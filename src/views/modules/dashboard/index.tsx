@@ -1,18 +1,36 @@
+import { useEffect, useState } from 'react';
+
 import { Card, Descriptions, Button } from 'antd';
 import { DescriptionsProps } from 'antd/es/descriptions';
-import styles from './index.module.scss';
-import { useEffect, useState } from 'react';
-import * as echarts from 'echarts';
+
 import { useStore } from '@/store';
 import { ReportData } from '@/types/dashboard';
 import dashboard from '@/api/dashboard';
+import { useCharts } from '@/hooks/useCharts';
+import styles from './index.module.scss';
+
 export default function Dashboard() {
   const { userInfo } = useStore();
   const [reportData, setReportData] = useState<ReportData>();
+
+  // 初始化折线图
+  const [lineChartRef, lineChartInstance] = useCharts();
+  // 初始化饼图
+  const [pieChartCityRef, pieChartCityInstance] = useCharts();
+  const [pieChartAgeRef, pieChartAgeInstance] = useCharts();
+  // 初始化雷达图
+  const [radarChartRef, radarChartInstance] = useCharts();
+
   useEffect(() => {
-    const lineChartDom = document.getElementById('lineChart');
-    const lineChartInstance = echarts.init(lineChartDom);
-    lineChartInstance.setOption({
+    getLineChartData();
+    getPieChartCityData();
+    getPieChartAgeData();
+    getRadarChartData();
+  }, [lineChartInstance, pieChartCityInstance, pieChartAgeInstance, radarChartInstance]);
+  const getLineChartData = async () => {
+    if (!lineChartInstance) return;
+    const data = await dashboard.getLineChartData();
+    lineChartInstance?.setOption({
       // title: {
       //   text: '订单和流水走势图',
       // },
@@ -28,7 +46,7 @@ export default function Dashboard() {
         bottom: 20,
       },
       xAxis: {
-        data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+        data: data.label,
       },
       yAxis: {
         type: 'value',
@@ -37,18 +55,20 @@ export default function Dashboard() {
         {
           name: '订单',
           type: 'line',
-          data: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120],
+          data: data.order,
         },
         {
           name: '流水',
           type: 'line',
-          data: [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000],
+          data: data.money,
         },
       ],
     });
-    const pieChartCityDom = document.getElementById('pieChartCity');
-    const pieChartCityInstance = echarts.init(pieChartCityDom);
-    pieChartCityInstance.setOption({
+  };
+  const getPieChartCityData = async () => {
+    if (!pieChartCityInstance) return;
+    const data = await dashboard.getPieChartCityData();
+    pieChartCityInstance?.setOption({
       title: {
         text: '司机城市分布',
         left: 'center',
@@ -65,18 +85,15 @@ export default function Dashboard() {
           name: '城市分布',
           type: 'pie',
           radius: '50%',
-          data: [
-            { value: 1048, name: '成都' },
-            { value: 735, name: '北京' },
-            { value: 580, name: '上海' },
-            { value: 484, name: '广州' },
-          ],
+          data: data,
         },
       ],
     });
-    const pieChartAgeDom = document.getElementById('pieChartAge');
-    const pieChartAgeInstance = echarts.init(pieChartAgeDom);
-    pieChartAgeInstance.setOption({
+  };
+  const getPieChartAgeData = async () => {
+    if (!pieChartAgeInstance) return;
+    const data = await dashboard.getPieChartAgeData();
+    pieChartAgeInstance?.setOption({
       title: {
         text: '司机年龄分布',
         left: 'center',
@@ -94,49 +111,30 @@ export default function Dashboard() {
           type: 'pie',
           radius: [30, 120],
           roseType: 'area',
-          data: [
-            { value: 30, name: '北京' },
-            { value: 35, name: '上海' },
-            { value: 40, name: '广州' },
-            { value: 45, name: '深圳' },
-            { value: 50, name: '成都' },
-            { value: 55, name: '重庆' },
-            { value: 60, name: '西安' },
-            { value: 65, name: '武汉' },
-            { value: 70, name: '杭州' },
-          ],
+          data: data,
         },
       ],
     });
-    const radarChartDom = document.getElementById('radarChart');
-    const radarChartInstance = echarts.init(radarChartDom);
-    radarChartInstance.setOption({
+  };
+  const getRadarChartData = async () => {
+    if (!radarChartInstance) return;
+    const data = await dashboard.getRadarChartData();
+    radarChartInstance?.setOption({
       legend: {
         data: ['司机模型诊断'],
       },
       radar: {
-        indicator: [
-          { name: '服务态度', max: 10 },
-          { name: '在线时长', max: 100 },
-          { name: '接单率', max: 100 },
-          { name: '评分', max: 5 },
-          { name: '关注度', max: 10000 },
-        ],
+        indicator: data.indicator,
       },
       series: [
         {
           name: '模型诊断',
           type: 'radar',
-          data: [
-            {
-              name: '司机模型诊断',
-              value: [8, 50, 80, 4, 9000],
-            },
-          ],
+          data: data.data,
         },
       ],
     });
-  }, []);
+  };
   const items: DescriptionsProps['items'] = [
     {
       key: '1',
@@ -173,6 +171,11 @@ export default function Dashboard() {
     const data = await dashboard.getReportData();
     setReportData(data);
   };
+  // 刷新饼图
+  const refreshPieChart = () => {
+    getPieChartCityData();
+    getPieChartAgeData();
+  };
   useEffect(() => {
     getReportData();
   }, []);
@@ -204,21 +207,42 @@ export default function Dashboard() {
         </div>
       </div>
       <div className={styles.chart}>
-        <Card title='订单和流水走势图' extra={<Button type='primary'>刷新</Button>}>
-          <div id='lineChart' className={styles.itemChart}></div>
+        <Card
+          title='订单和流水走势图'
+          extra={
+            <Button type='primary' onClick={getLineChartData}>
+              刷新
+            </Button>
+          }
+        >
+          <div ref={lineChartRef} className={styles.itemChart}></div>
         </Card>
       </div>
       <div className={styles.chart}>
-        <Card title='司机分布' extra={<Button type='primary'>刷新</Button>}>
+        <Card
+          title='司机分布'
+          extra={
+            <Button type='primary' onClick={refreshPieChart}>
+              刷新
+            </Button>
+          }
+        >
           <div className={styles.pieChart}>
-            <div id='pieChartCity' className={styles.itemPie}></div>
-            <div id='pieChartAge' className={styles.itemPie}></div>
+            <div ref={pieChartCityRef} className={styles.itemPie}></div>
+            <div ref={pieChartAgeRef} className={styles.itemPie}></div>
           </div>
         </Card>
       </div>
       <div className={styles.chart}>
-        <Card title='模型诊断' extra={<Button type='primary'>刷新</Button>}>
-          <div id='radarChart' className={styles.itemChart}></div>
+        <Card
+          title='模型诊断'
+          extra={
+            <Button type='primary' onClick={getRadarChartData}>
+              刷新
+            </Button>
+          }
+        >
+          <div ref={radarChartRef} className={styles.itemChart}></div>
         </Card>
       </div>
     </div>

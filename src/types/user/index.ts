@@ -1,3 +1,5 @@
+import { PageParams } from '@/types/api';
+
 export interface UserInfo {
   _id: string;
   userImg: string;
@@ -12,4 +14,10 @@ export interface UserInfo {
   role: number;
   createId: number;
   roleList: string;
+}
+
+export interface Params extends PageParams {
+  userId?: number;
+  userName?: string;
+  state?: number;
 }

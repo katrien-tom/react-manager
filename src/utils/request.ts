@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios';
 
 import { showLoading, hideLoading } from './loading';
 import storage from './storage';
-import { ResponseData } from '@/types/api';
+import { Result } from '@/types/api';
 import { message } from '@/components/AntdGlobal';
 
 const instance = axios.create({
@@ -38,13 +38,12 @@ instance.interceptors.request.use(
 // 添加响应拦截器
 instance.interceptors.response.use(
   response => {
-    const data: ResponseData = response.data;
+    const data: Result = response.data;
     hideLoading();
     if (data.code === 500001) {
       message.error(data.msg);
       storage.remove('token');
-      location.href = '/#/login';
-      return Promise.reject(data.msg);
+      location.href = '/#/login?callback=' + encodeURIComponent(window.location.href);
     } else if (data.code != 0) {
       message.error(data.msg);
       return Promise.reject(data);

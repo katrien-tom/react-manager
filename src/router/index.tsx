@@ -6,6 +6,8 @@ import NotFound from '@/views/common/NotFound';
 import Forbidden from '@/views/common/Forbidden';
 import Layout from '@/layout';
 import Dashboard from '@/views/modules/dashboard';
+import User from '@/views/modules/system/user';
+
 const router = [
   {
     path: '/',
@@ -22,6 +24,10 @@ const router = [
       {
         path: '/dashboard',
         element: <Dashboard />,
+      },
+      {
+        path: '/system/user',
+        element: <User />,
       },
     ],
   },
