@@ -1,10 +1,11 @@
 import { useState } from "react";
 
-import { Form, Input, Upload, Modal, Select, message} from "antd";
+import { Form, Input, Upload, Modal, Select} from "antd";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import { RcFile } from "antd/es/upload";
+import { RcFile, UploadChangeParam } from "antd/es/upload";
 
 import storage from "@/utils/storage";
+import { message } from "@/components/AntdGlobal";
 
 const CreateUser = () => {
   const [open, setOpen] = useState(true);
@@ -32,8 +33,18 @@ const CreateUser = () => {
     return isJpgOrPng && isLt2M;
   };
   // 上传图片后的钩子
-  const handleChange = (info: any) => {
-    setLoading(false);
+  const handleChange = (info: UploadChangeParam) => {
+    if(info.file.status === 'uploading'){
+      setLoading(true);
+      return;
+    }
+    if (info.file.status === 'done') {
+      message.success('上传成功');
+      setLoading(false);
+    } else if (info.file.status === 'error') {
+      message.error('上传失败');
+      setLoading(false);
+    }
   };
   return (
   <div className="create-user">
@@ -80,7 +91,7 @@ const CreateUser = () => {
           headers={{
             Authorization: `Bearer ${storage.get('token')}`
           }}
-          action='/api/users/upload'
+          action='/api/users/uploads'
           beforeUpload={beforeUpload}
           onChange={handleChange}
           >
