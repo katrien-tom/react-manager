@@ -6,8 +6,9 @@ import { ColumnType } from 'antd/es/table';
 import { UserInfo } from '@/types/user';
 import userApi from '@/api/user';
 import { PageParams } from '@/types/api';
-
+import CreateUser from './CreateUser';
 export default function User() {
+  const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
   const [data, setData] = useState<UserInfo[]>([]);
   const [total, setTotal] = useState(0);
@@ -92,8 +93,8 @@ export default function User() {
       render: (text: number) => {
         return {
           1: '在职',
-          2: '试用期',
-          3: '离职',
+          2: '离职',
+          3: '试用期',
         }[text];
       },
     },
@@ -128,8 +129,8 @@ export default function User() {
           <Select placeholder='请选择状态' style={{ width: 120 }}>
             <Select.Option value={0}>所有</Select.Option>
             <Select.Option value={1}>在职</Select.Option>
-            <Select.Option value={2}>试用期</Select.Option>
-            <Select.Option value={3}>离职</Select.Option>
+            <Select.Option value={2}>离职</Select.Option>
+            <Select.Option value={3}>试用期</Select.Option>
           </Select>
         </Form.Item>
         <Form.Item>
@@ -147,7 +148,7 @@ export default function User() {
         <div className='headerWrapper'>
           <div className='title'>用户列表</div>
           <div className='action'>
-            <Button type='primary'>新增</Button>
+            <Button type='primary' onClick={() => setOpen(true)}>新增</Button>
             <Button type='primary' danger>
               批量删除
             </Button>
@@ -177,6 +178,7 @@ export default function User() {
         />
         ;
       </div>
+      <CreateUser/>
     </div>
   );
 }

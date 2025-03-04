@@ -149,7 +149,7 @@ export default function Dashboard() {
     {
       key: '3',
       label: '状态',
-      children: userInfo.state === 1 ? '在职' : userInfo.state === 2 ? '试用期' : '离职',
+      children: userInfo.state === 1 ? '在职' : userInfo.state === 2 ? '离职' : '试用期',
     },
     {
       key: '4',
