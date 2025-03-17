@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useImperativeHandle, useState } from 'react';
 
 import { Form, Input, Upload, Modal, Select, Image } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
@@ -6,18 +6,44 @@ import { RcFile, UploadChangeParam } from 'antd/es/upload';
 
 import storage from '@/utils/storage';
 import { message } from '@/components/AntdGlobal';
+import { IAction, IModalProp } from '@/types/modal';
+import { UserInfo } from '@/types/user';
 
-const CreateUser = () => {
-  const [open, setOpen] = useState(true);
+const CreateUser = (props: IModalProp) => {
+  const [visible, setVisible] = useState(false);
+  const [action, setAction] = useState<IAction>('create');
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [imgUrl, setImgUrl] = useState('');
+
+  // 暴露子组件的open方法
+  useImperativeHandle(props.mRef,()=>{
+    return {
+      open:(type:IAction,data?:UserInfo)=>{
+        setVisible(true);
+        setAction(type);
+        if(data){
+          form.setFieldsValue(data);
+        }
+      },
+      close:()=>{
+        setVisible(false);
+      }
+    }
+  })
+
+  // 调用弹窗显示
+  const open = (type: IAction,data?:UserInfo) => {
+    setAction(type);
+    setVisible(true);
+  };
+
   const handleSubmit = async () => {
     const validate = await form.validateFields();
     console.log('submit', validate);
   };
   const handleCancel = () => {
-    setOpen(false);
+    setVisible(false);
   };
   // 上传图片前的钩子
   const beforeUpload = (file: RcFile) => {
@@ -61,7 +87,7 @@ const CreateUser = () => {
         okText='提交'
         cancelText='取消'
         width={800}
-        open={open}
+        open={visible}
         onOk={handleSubmit}
         onCancel={handleCancel}
       >

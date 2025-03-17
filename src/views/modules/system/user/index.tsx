@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useRef } from 'react';
 
 import { Button, Table, Form, Input, Select, Space } from 'antd';
 import { ColumnType } from 'antd/es/table';
@@ -7,11 +7,15 @@ import { UserInfo } from '@/types/user';
 import userApi from '@/api/user';
 import { PageParams } from '@/types/api';
 import CreateUser from './CreateUser';
+import { IAction } from '@/types/modal';
 export default function User() {
-  const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
   const [data, setData] = useState<UserInfo[]>([]);
   const [total, setTotal] = useState(0);
+  const userRef = useRef<{
+    open: (type: IAction,data?:UserInfo) => void | undefined;
+    close: () => void;
+  }>();
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
@@ -148,7 +152,7 @@ export default function User() {
         <div className='headerWrapper'>
           <div className='title'>用户列表</div>
           <div className='action'>
-            <Button type='primary' onClick={() => setOpen(true)}>新增</Button>
+            <Button type='primary'>新增</Button>
             <Button type='primary' danger>
               批量删除
             </Button>
@@ -178,7 +182,10 @@ export default function User() {
         />
         ;
       </div>
-      <CreateUser/>
+      <CreateUser mRef={userRef} update={()=>getUserList({
+        pageNum:pagination.current,
+        pageSize:pagination.pageSize
+      })}/>
     </div>
   );
 }

@@ -1,11 +1,16 @@
-import { MutableRefObject } from "react";
+import { MutableRefObject } from 'react';
+import { UserInfo } from './user';
 
-export type IAction  = 'create' | 'update' | 'delete'
+export type IAction = 'create' | 'update' | 'delete';
 
 export interface IModalProp {
-    mRef:MutableRefObject<{
-        open:(type:IAction)=>void | undefined,
-    }>,
-    update:()=>void,
+  mRef: MutableRefObject<
+    {
+        // eslint-disable-next-line no-unused-vars
+        open: (type: IAction, data?: UserInfo) => void;
+        close: () => void | undefined;
+      }
+    | undefined
+  >;
+  update: () => void;
 }
-
