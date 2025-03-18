@@ -8,42 +8,48 @@ import storage from '@/utils/storage';
 import { message } from '@/components/AntdGlobal';
 import { IAction, IModalProp } from '@/types/modal';
 import { UserInfo } from '@/types/user';
-
 const CreateUser = (props: IModalProp) => {
-  const [visible, setVisible] = useState(false);
-  const [action, setAction] = useState<IAction>('create');
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [imgUrl, setImgUrl] = useState('');
+  const [visible, setVisible] = useState(false);
+  const [action, setAction] = useState<IAction>('create');
 
-  // 暴露子组件的open方法
+
+  // 暴漏子组件open方法
   useImperativeHandle(props.mRef,()=>{
     return {
-      open:(type:IAction,data?:UserInfo)=>{
-        setVisible(true);
-        setAction(type);
-        if(data){
-          form.setFieldsValue(data);
-        }
-      },
-      close:()=>{
-        setVisible(false);
-      }
+      open
     }
   })
 
-  // 调用弹窗显示
-  const open = (type: IAction,data?:UserInfo) => {
+  // 调用弹窗显示方法
+  const open = (type: IAction, data?: UserInfo) => {
+    if (data) {
+      console.log(data);
+    }
     setAction(type);
     setVisible(true);
+  }
+
+  const handleCancel = () => {
+    console.log('cancel');
   };
 
   const handleSubmit = async () => {
     const validate = await form.validateFields();
     console.log('submit', validate);
-  };
-  const handleCancel = () => {
-    setVisible(false);
+    if(validate){
+      const params = {
+        ...form.getFieldsValue(),
+        userImg: imgUrl,
+      };
+      if(action === 'create'){
+        console.log('create');
+      }else{
+        console.log('edit');
+      }
+    }
   };
   // 上传图片前的钩子
   const beforeUpload = (file: RcFile) => {

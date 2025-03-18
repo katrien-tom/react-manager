@@ -13,8 +13,8 @@ export default function User() {
   const [data, setData] = useState<UserInfo[]>([]);
   const [total, setTotal] = useState(0);
   const userRef = useRef<{
-    open: (type: IAction,data?:UserInfo) => void | undefined;
-    close: () => void;
+    // eslint-disable-next-line no-unused-vars
+    open: (type: IAction,data?:UserInfo) => void;
   }>();
   const [pagination, setPagination] = useState({
     current: 1,
@@ -26,6 +26,12 @@ export default function User() {
       pageSize: pagination.pageSize,
     });
   }, [pagination.current,pagination.pageSize]);
+
+  // 创建用户
+  const handleCreate = () => {
+    userRef.current?.open('create');
+  }
+
   // 搜索
   const handleSearch = () => {
     getUserList({
@@ -46,6 +52,7 @@ export default function User() {
     });
     const newDataList = Array.from({ length: 50 })
       .fill({})
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .map((item: any) => {
         item = {
           ...data.list[0],
@@ -152,7 +159,7 @@ export default function User() {
         <div className='headerWrapper'>
           <div className='title'>用户列表</div>
           <div className='action'>
-            <Button type='primary'>新增</Button>
+            <Button type='primary' onClick={handleCreate}>新增</Button>
             <Button type='primary' danger>
               批量删除
             </Button>

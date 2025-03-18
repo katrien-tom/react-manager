@@ -8,7 +8,6 @@ export interface IModalProp {
     {
         // eslint-disable-next-line no-unused-vars
         open: (type: IAction, data?: UserInfo) => void;
-        close: () => void | undefined;
       }
     | undefined
   >;
