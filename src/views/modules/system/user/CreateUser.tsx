@@ -8,6 +8,7 @@ import storage from '@/utils/storage';
 import { message } from '@/components/AntdGlobal';
 import { IAction, IModalProp } from '@/types/modal';
 import { UserInfo } from '@/types/user';
+import userApi from '@/api/user';
 const CreateUser = (props: IModalProp) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
@@ -15,40 +16,47 @@ const CreateUser = (props: IModalProp) => {
   const [visible, setVisible] = useState(false);
   const [action, setAction] = useState<IAction>('create');
 
-
   // 暴漏子组件open方法
-  useImperativeHandle(props.mRef,()=>{
+  useImperativeHandle(props.mRef, () => {
     return {
-      open
-    }
-  })
+      open,
+    };
+  });
 
   // 调用弹窗显示方法
   const open = (type: IAction, data?: UserInfo) => {
-    if (data) {
-      console.log(data);
-    }
     setAction(type);
     setVisible(true);
-  }
+    if (type === 'edit' && data) {
+      form.setFieldsValue(data);
+      setImgUrl(data.userImg);
+    }
+  };
 
   const handleCancel = () => {
-    console.log('cancel');
+    setVisible(false);
+    form.resetFields();
   };
 
   const handleSubmit = async () => {
     const validate = await form.validateFields();
     console.log('submit', validate);
-    if(validate){
+    if (validate) {
       const params = {
         ...form.getFieldsValue(),
         userImg: imgUrl,
       };
-      if(action === 'create'){
-        console.log('create');
-      }else{
-        console.log('edit');
+      if (action === 'create') {
+        const res = await userApi.createUser(params);
+        console.log('create-res:', res);
+        message.success('创建成功');
+      } else {
+        const res = await userApi.editUser(params);
+        console.log('edit-res:', res);
+        message.success('编辑成功');
       }
+      handleCancel();
+      props.update();
     }
   };
   // 上传图片前的钩子
@@ -98,6 +106,9 @@ const CreateUser = (props: IModalProp) => {
         onCancel={handleCancel}
       >
         <Form form={form} layout='vertical' labelCol={{ span: 4 }} labelAlign='right'>
+          <Form.Item name='userId' hidden>
+            <Input />
+          </Form.Item>
           <Form.Item label='用户名称' name='userName' rules={[{ required: true, message: '请输入用户名称' }]}>
             <Input placeholder='请输入用户名称' />
           </Form.Item>

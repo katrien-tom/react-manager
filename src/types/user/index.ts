@@ -16,7 +16,22 @@ export interface UserInfo {
   roleList: string;
 }
 
-export interface Params extends PageParams {
+export interface CreateUserParams {
+  userName: string;
+  userEmail: string;
+  mobile: string;
+  deptId: string;
+  job?: string;
+  state?: number;
+  roleList: string[];
+  userImg: string;
+}
+
+export interface EditUserParams extends CreateUserParams {
+  userId: number;
+}
+
+export interface SearchParams extends PageParams {
   userId?: number;
   userName?: string;
   state?: number;

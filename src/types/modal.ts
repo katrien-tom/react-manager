@@ -1,7 +1,7 @@
 import { MutableRefObject } from 'react';
 import { UserInfo } from './user';
 
-export type IAction = 'create' | 'update' | 'delete';
+export type IAction = 'create' | 'edit' | 'delete';
 
 export interface IModalProp {
   mRef: MutableRefObject<

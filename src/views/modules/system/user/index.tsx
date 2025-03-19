@@ -1,4 +1,4 @@
-import { useEffect, useState,useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import { Button, Table, Form, Input, Select, Space } from 'antd';
 import { ColumnType } from 'antd/es/table';
@@ -14,7 +14,7 @@ export default function User() {
   const [total, setTotal] = useState(0);
   const userRef = useRef<{
     // eslint-disable-next-line no-unused-vars
-    open: (type: IAction,data?:UserInfo) => void;
+    open: (type: IAction, data?: UserInfo) => void;
   }>();
   const [pagination, setPagination] = useState({
     current: 1,
@@ -25,12 +25,15 @@ export default function User() {
       pageNum: pagination.current,
       pageSize: pagination.pageSize,
     });
-  }, [pagination.current,pagination.pageSize]);
+  }, [pagination.current, pagination.pageSize]);
 
   // 创建用户
   const handleCreate = () => {
     userRef.current?.open('create');
-  }
+  };
+  const handleEdit = (record: UserInfo) => {
+    userRef.current?.open('edit', record);
+  };
 
   // 搜索
   const handleSearch = () => {
@@ -117,9 +120,11 @@ export default function User() {
     {
       title: '操作',
       key: 'action',
-      render: () => (
+      render: (record: UserInfo) => (
         <Space>
-          <Button type='text'>编辑</Button>
+          <Button type='text' onClick={() => handleEdit(record)}>
+            编辑
+          </Button>
           <Button type='text' danger>
             删除
           </Button>
@@ -159,7 +164,9 @@ export default function User() {
         <div className='headerWrapper'>
           <div className='title'>用户列表</div>
           <div className='action'>
-            <Button type='primary' onClick={handleCreate}>新增</Button>
+            <Button type='primary' onClick={handleCreate}>
+              新增
+            </Button>
             <Button type='primary' danger>
               批量删除
             </Button>
@@ -176,7 +183,7 @@ export default function User() {
             current: pagination.current,
             pageSize: pagination.pageSize,
             total,
-            showTotal: (total) => `共${total}条`,
+            showTotal: total => `共${total}条`,
             showSizeChanger: true,
             showQuickJumper: true,
             onChange: (page, pageSize) => {
@@ -189,10 +196,15 @@ export default function User() {
         />
         ;
       </div>
-      <CreateUser mRef={userRef} update={()=>getUserList({
-        pageNum:pagination.current,
-        pageSize:pagination.pageSize
-      })}/>
+      <CreateUser
+        mRef={userRef}
+        update={() =>
+          getUserList({
+            pageNum: pagination.current,
+            pageSize: pagination.pageSize,
+          })
+        }
+      />
     </div>
   );
 }
