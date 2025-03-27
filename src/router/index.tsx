@@ -7,6 +7,7 @@ import Forbidden from '@/views/common/Forbidden';
 import Layout from '@/layout';
 import Dashboard from '@/views/modules/dashboard';
 import User from '@/views/modules/system/user';
+import Dept from '@/views/modules/system/dept';
 
 const router = [
   {
@@ -28,6 +29,10 @@ const router = [
       {
         path: '/system/user',
         element: <User />,
+      },
+      {
+        path: '/system/dept',
+        element: <Dept />,
       },
     ],
   },
