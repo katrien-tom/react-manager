@@ -1,75 +1,88 @@
-import { useEffect, useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 
-import { Button, Table, Form, Input, Select, Space } from 'antd';
+import { Button, Table, Form, Input, Select, Space, Modal } from 'antd';
 import { ColumnType } from 'antd/es/table';
+import { useAntdTable } from 'ahooks';
 
-import { UserInfo } from '@/types/user';
+import { UserInfo, SearchParams } from '@/types/user';
 import userApi from '@/api/user';
-import { PageParams } from '@/types/api';
 import CreateUser from './CreateUser';
 import { IAction } from '@/types/modal';
+import { message } from '@/components/AntdGlobal';
 export default function User() {
   const [form] = Form.useForm();
-  const [data, setData] = useState<UserInfo[]>([]);
-  const [total, setTotal] = useState(0);
+  const [userIds, setUserIds] = useState<number[]>([]);
   const userRef = useRef<{
     // eslint-disable-next-line no-unused-vars
     open: (type: IAction, data?: UserInfo) => void;
   }>();
-  const [pagination, setPagination] = useState({
-    current: 1,
-    pageSize: 10,
-  });
-  useEffect(() => {
-    getUserList({
-      pageNum: pagination.current,
-      pageSize: pagination.pageSize,
-    });
-  }, [pagination.current, pagination.pageSize]);
 
   // 创建用户
   const handleCreate = () => {
     userRef.current?.open('create');
   };
+  // 编辑用户
   const handleEdit = (record: UserInfo) => {
     userRef.current?.open('edit', record);
   };
+  // 删除用户
+  const handleDeleteConfirm = (userId: number) => {
+    Modal.confirm({
+      title: '删除确认',
+      content: <span>确认删除该用户吗？</span>,
+      onOk: () => {
+        handleUserDeleteSubmit([userId]);
+      },
+    });
+  };
+  // 批量删除
+  const handleBatchDeleteConfirm = () => {
+    if (userIds.length === 0) {
+      message.error('请选择要删除的用户');
+      return;
+    }
+    Modal.confirm({
+      title: '删除确认',
+      content: <span>确认删除该批用户吗？</span>,
+      onOk: () => {
+        handleUserDeleteSubmit(userIds);
+      },
+    });
+  };
 
-  // 搜索
-  const handleSearch = () => {
-    getUserList({
-      pageNum: pagination.current,
-      pageSize: pagination.pageSize,
-    });
-  };
-  // 重置表单
-  const handleReset = () => {
-    form.resetFields();
-  };
-  // 获取用户列表
-  const getUserList = async (pageParams: PageParams) => {
-    const params = form.getFieldsValue();
-    const data = await userApi.getUserList({
-      ...params,
-      ...pageParams,
-    });
-    const newDataList = Array.from({ length: 50 })
-      .fill({})
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .map((item: any) => {
-        item = {
-          ...data.list[0],
-        };
-        item.userId = Math.random();
-        return item;
+  // 公共删除用户接口
+  const handleUserDeleteSubmit = async (ids: number[]) => {
+    try {
+      await userApi.deleteUser({
+        userIds: ids,
       });
-    setData(newDataList);
-    setTotal(newDataList.length);
-    setPagination({
-      current: data.page.pageNum,
-      pageSize: data.page.pageSize,
-    });
+      message.success('删除成功');
+      setUserIds([]);
+      search.reset();
+    } catch (error) {
+      console.log('删除失败error：', error);
+      message.error('删除成功');
+    }
   };
+
+  const getTableData = ({ current, pageSize }: { current: number; pageSize: number }, formData: SearchParams) => {
+    return userApi
+      .getUserList({
+        ...formData,
+        pageNum: current,
+        pageSize: pageSize,
+      })
+      .then(data => {
+        return {
+          total: data.page.total,
+          list: data.list,
+        };
+      });
+  };
+
+  const { tableProps, search } = useAntdTable(getTableData, {
+    form,
+  });
 
   const columns: ColumnType<UserInfo>[] = [
     {
@@ -125,7 +138,7 @@ export default function User() {
           <Button type='text' onClick={() => handleEdit(record)}>
             编辑
           </Button>
-          <Button type='text' danger>
+          <Button type='text' danger onClick={() => handleDeleteConfirm(record.userId)}>
             删除
           </Button>
         </Space>
@@ -151,10 +164,10 @@ export default function User() {
         </Form.Item>
         <Form.Item>
           <Space>
-            <Button type='primary' onClick={handleSearch}>
+            <Button type='primary' onClick={search.submit}>
               搜索
             </Button>
-            <Button type='default' onClick={handleReset}>
+            <Button type='default' onClick={search.reset}>
               重置
             </Button>
           </Space>
@@ -167,44 +180,32 @@ export default function User() {
             <Button type='primary' onClick={handleCreate}>
               新增
             </Button>
-            <Button type='primary' danger>
+            <Button
+              type='primary'
+              danger
+              onClick={() => {
+                handleBatchDeleteConfirm;
+              }}
+            >
               批量删除
             </Button>
           </div>
         </div>
         <Table
           bordered
-          rowSelection={{ type: 'checkbox' }}
-          dataSource={data}
           columns={columns}
           rowKey='userId'
-          pagination={{
-            position: ['bottomRight'],
-            current: pagination.current,
-            pageSize: pagination.pageSize,
-            total,
-            showTotal: total => `共${total}条`,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            onChange: (page, pageSize) => {
-              setPagination({
-                current: page,
-                pageSize: pageSize,
-              });
+          rowSelection={{
+            type: 'checkbox',
+            selectedRowKeys: userIds,
+            onChange: (selectedRowKeys: React.Key[]) => {
+              setUserIds(selectedRowKeys as number[]);
             },
           }}
+          {...tableProps}
         />
-        ;
       </div>
-      <CreateUser
-        mRef={userRef}
-        update={() =>
-          getUserList({
-            pageNum: pagination.current,
-            pageSize: pagination.pageSize,
-          })
-        }
-      />
+      <CreateUser mRef={userRef} update={() => search.reset} />
     </div>
   );
 }

@@ -4,19 +4,23 @@ import { ResultData } from "@/types/api";
 
 export default {
   // 获取用户信息
-  getUserInfo: () => {
+  getUserInfo(){
     return request.get<UserInfo>('/users/getUserInfo');
   },
   // 获取用户列表
-  getUserList: (params: SearchParams) => {
+  getUserList(params: SearchParams){
     return request.get<ResultData<UserInfo>>('/users/list', params);
   },
   // 新增用户
-  createUser: (data: CreateUserParams) => {
-    return request.post<ResultData>('/users/create', data);
+  createUser(params: CreateUserParams){
+    return request.post<ResultData>('/users/create', params);
   },
   // 编辑用户
-  editUser: (data: EditUserParams) => {
-    return request.post<ResultData>('/users/edit', data);
+  editUser(params: EditUserParams){
+    return request.post<ResultData>('/users/edit', params);
+  },
+  // 删除和批量删除用户
+  deleteUser(params: {userIds: number[]}) {
+    return request.post<ResultData>('/users/delete', params);
   },
 };

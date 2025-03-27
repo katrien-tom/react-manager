@@ -19,5 +19,5 @@ export interface ResultData<T = any> {
 }
 export interface PageParams  {
   pageNum: number;
-  pageSize: number;
+  pageSize?: number;
 }
