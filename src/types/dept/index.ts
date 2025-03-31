@@ -11,3 +11,17 @@ export interface DeptItem {
   userName: string;
   children: DeptItem[];
 }
+
+export interface CreateDeptParam {
+  deptName: string;
+  parentId?: string;
+  userName: string;
+}
+
+export interface EditDeptParam extends CreateDeptParam{
+  _id: string;
+}
+
+export interface DeleteDeptParam{
+  _id: string;
+}

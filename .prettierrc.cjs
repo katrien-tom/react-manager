@@ -1,6 +1,6 @@
 module.exports = {
     // 每行最大字符数
-    printWidth: 150,
+    printWidth: 120,
     // 缩进大小
     tabWidth: 2,
     // 是否使用tab缩进

@@ -97,7 +97,15 @@ const CreateUser = (props: IModalProp) => {
   };
   return (
     <div className='create-user'>
-      <Modal title='创建用户' okText='提交' cancelText='取消' width={800} open={visible} onOk={handleSubmit} onCancel={handleCancel}>
+      <Modal
+        title={action === 'create' ? '创建用户' : '修改用户'}
+        okText='提交'
+        cancelText='取消'
+        width={800}
+        open={visible}
+        onOk={handleSubmit}
+        onCancel={handleCancel}
+      >
         <Form form={form} layout='vertical' labelCol={{ span: 4 }} labelAlign='right'>
           <Form.Item name='userId' hidden>
             <Input />
