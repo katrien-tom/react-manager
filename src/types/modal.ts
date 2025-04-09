@@ -3,11 +3,11 @@ import { UserInfo } from './user';
 
 export type IAction = 'create' | 'edit' | 'delete';
 
-export interface IModalProp {
+export interface IModalProp<T = UserInfo>  {
   mRef: MutableRefObject<
     {
         // eslint-disable-next-line no-unused-vars
-        open: (type: IAction, data?: UserInfo) => void;
+        open: (type: IAction, data: T) => void;
       }
     | undefined
   >;

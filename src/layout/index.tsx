@@ -1,5 +1,5 @@
-import { useNavigate, Outlet } from 'react-router-dom';
-import { useEffect, useCallback } from 'react';
+import { Outlet, useRouteLoaderData, useLocation, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 import { Layout, Watermark } from 'antd';
 
@@ -9,43 +9,56 @@ import SideMenu from '@/components/SideMenu';
 import user from '@/api/user';
 import { useStore } from '@/store';
 import styles from './index.module.scss';
-import logo from '@/assets/images/logo.png';
+import { IAuthLoader } from '@/router/AuthLoader';
+import { searchRoute } from '@/utils';
+import router from '@/router/index';
 
 const { Sider } = Layout;
 
 const App: React.FC = () => {
-  const navigate = useNavigate();
-  const { updateUserInfo } = useStore();
-
-  const getUserInfo = useCallback(async () => {
-    const data = await user.getUserInfo();
-    updateUserInfo(data);
-    console.log('layout-getUserInfo:', data.userName);
-  }, [updateUserInfo]);
+  const { pathname } = useLocation();
+  const { collapsed, userInfo, updateUserInfo } = useStore();
 
   useEffect(() => {
     getUserInfo();
-  }, [getUserInfo]);
+  }, []);
+  const getUserInfo = async () => {
+    const data = await user.getUserInfo();
+    console.log('layout-getUserInfo:', data.userName);
+    updateUserInfo(data);
+  };
+
+  // 权限判断
+  const data = useRouteLoaderData('layout') as IAuthLoader;
+  const route = searchRoute(pathname, router);
+  if (route && route.meta?.auth === false) {
+    // 继续执行
+  } else {
+    const staticPath = ['/welcome', '/403', '/404'];
+    if (!data.menuPathList.includes(pathname) && !staticPath.includes(pathname)) {
+      return <Navigate to='/403' />;
+    }
+  }
 
   return (
     <div className='layoutContainer'>
       <Watermark content='Ant Design'>
-        <Layout>
-          <Sider trigger={null} collapsible>
-            <div className={styles.logo} onClick={() => navigate('/welcome')}>
-              <img src={logo} alt='logo' />
-              <span>智慧园区</span>
-            </div>
-            <SideMenu />
-          </Sider>
+        {userInfo._id ? (
           <Layout>
-            <NavHeader />
-            <div className={styles.content}>
-              <Outlet />
-            </div>
-            <NavFooter />
+            <Sider collapsed={collapsed}>
+              <SideMenu />
+            </Sider>
+            <Layout>
+              <NavHeader />
+              <div className={styles.content}>
+                <div className={styles.wrapper}>
+                  <Outlet></Outlet>
+                </div>
+                <NavFooter />
+              </div>
+            </Layout>
           </Layout>
-        </Layout>
+        ) : null}
       </Watermark>
     </div>
   );

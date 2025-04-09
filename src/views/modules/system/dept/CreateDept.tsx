@@ -10,7 +10,7 @@ import userApi from '@/api/user';
 import { UserInfo } from '@/types/user';
 import { message } from '@/components/AntdGlobal';
 
-export default function CreateDept(props: IModalProp) {
+export default function CreateDept(props: IModalProp<DeptItem>) {
   const [form] = useForm();
   const [action, setAction] = useState<IAction>('create');
   const [visible, setVisible] = useState(false);

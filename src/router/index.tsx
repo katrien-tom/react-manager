@@ -1,4 +1,4 @@
-import { Navigate, useRoutes } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 import Login from '@/views/common/Login';
 import Welcome from '@/views/common/Welcome';
@@ -8,6 +8,8 @@ import Layout from '@/layout';
 import Dashboard from '@/views/modules/dashboard';
 import User from '@/views/modules/system/user';
 import Dept from '@/views/modules/system/dept';
+import Menu from '@/views/modules/system/menu';
+import AuthLoader from './AuthLoader';
 
 const router = [
   {
@@ -15,8 +17,14 @@ const router = [
     element: <Navigate to='/welcome' replace />,
   },
   {
+    path: '/login',
+    element: <Login />,
+  },
+  {
+    id: 'layout',
     path: '/',
     element: <Layout />,
+    loader: AuthLoader,
     children: [
       {
         path: '/welcome',
@@ -27,18 +35,18 @@ const router = [
         element: <Dashboard />,
       },
       {
-        path: '/system/user',
+        path: '/userList',
         element: <User />,
       },
       {
-        path: '/system/dept',
+        path: '/deptList',
         element: <Dept />,
       },
+      {
+        path: '/menuList',
+        element: <Menu />,
+      },
     ],
-  },
-  {
-    path: '/login',
-    element: <Login />,
   },
   {
     path: '/404',
@@ -54,6 +62,4 @@ const router = [
   },
 ];
 
-export default function Router() {
-  return useRoutes(router);
-}
+export default createBrowserRouter(router);

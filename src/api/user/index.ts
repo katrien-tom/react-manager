@@ -1,6 +1,7 @@
 import request from '@/utils/request';
 import { CreateUserParams, EditUserParams, SearchParams, UserInfo } from '@/types/user';
 import { ResultData } from '@/types/api';
+import { MenuItem } from '@/types/menu';
 
 export default {
   // 获取用户信息
@@ -26,5 +27,8 @@ export default {
   // 删除和批量删除用户
   deleteUser(params: { userIds: number[] }) {
     return request.post<ResultData>('/users/delete', params);
+  }, // 获取权限列表
+  getPermissionList() {
+    return request.get<{ buttonList: string[]; menuList: MenuItem[] }>('/users/getPermissionList');
   },
 };
