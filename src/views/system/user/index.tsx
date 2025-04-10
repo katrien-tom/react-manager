@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 
 import { Button, Table, Form, Input, Select, Space, Modal } from 'antd';
-import { ColumnType } from 'antd/es/table';
+import { ColumnsType } from 'antd/es/table';
 import { useAntdTable } from 'ahooks';
 
 import { UserInfo, SearchParams } from '@/types/user';
@@ -13,7 +13,6 @@ export default function User() {
   const [form] = Form.useForm();
   const [userIds, setUserIds] = useState<number[]>([]);
   const userRef = useRef<{
-    // eslint-disable-next-line no-unused-vars
     open: (type: IAction, data?: UserInfo) => void;
   }>();
 
@@ -82,9 +81,10 @@ export default function User() {
 
   const { tableProps, search } = useAntdTable(getTableData, {
     form,
+    defaultPageSize: 10,
   });
 
-  const columns: ColumnType<UserInfo>[] = [
+  const columns: ColumnsType<UserInfo> = [
     {
       title: '用户ID',
       dataIndex: 'userId',

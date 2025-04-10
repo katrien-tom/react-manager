@@ -36,7 +36,6 @@ const SideMenu = () => {
   }
   function createIcon(name?: string) {
     if (!name) return <></>;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const customerIcons = Icons as { [key: string]: any };
     const icon = customerIcons[name];
     if (!icon) return <></>;
@@ -59,7 +58,7 @@ const SideMenu = () => {
     const treeMenuList = getTreeMenu(data.menuList);
     setMenuList(treeMenuList);
     setSelectedKeys([pathname]);
-  }, [data, pathname]);
+  }, []);
 
   // Logo点击
   const handleClickLogo = () => {

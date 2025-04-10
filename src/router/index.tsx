@@ -5,10 +5,11 @@ import Welcome from '@/views/common/Welcome';
 import NotFound from '@/views/common/NotFound';
 import Forbidden from '@/views/common/Forbidden';
 import Layout from '@/layout';
-import Dashboard from '@/views/modules/dashboard';
-import User from '@/views/modules/system/user';
-import Dept from '@/views/modules/system/dept';
-import Menu from '@/views/modules/system/menu';
+import Dashboard from '@/views/dashboard';
+import User from '@/views/system/user';
+import Dept from '@/views/system/dept';
+import Menu from '@/views/system/menu';
+import Role from '@/views/system/role';
 import AuthLoader from './AuthLoader';
 
 const router = [
@@ -45,6 +46,10 @@ const router = [
       {
         path: '/menuList',
         element: <Menu />,
+      },
+      {
+        path: '/roleList',
+        element: <Role />,
       },
     ],
   },

@@ -15,10 +15,10 @@
 }
 .content {
   // 内容区高度，不设置高度会造成左侧菜单栏很长
-  height: calc(100vh - 124px);
+  height: calc(100vh - 64px);
   padding: 20px;
   overflow: auto;
 }
 .wrapper {
-  min-height: calc(100vh - 210px);
+  min-height: calc(100vh - 64px - 80px - 40px);
 }
