@@ -5,10 +5,19 @@
 import { MenuItem } from '@/types/menu';
 
 // 格式化金额
-export const formatMoney = (value: number | string) => {
-  const a = parseFloat(value as string);
-  return a.toLocaleString('zh-CN', { style: 'currency', currency: 'CNY' });
-};
+export const formatMoney = (num?: number | string) => {
+  if (!num) return '0.00'
+  const a = parseFloat(num.toString())
+  return a.toLocaleString('zh-CN', { style: 'currency', currency: 'CNY' })
+}
+
+// 格式化数字
+export const formatNum = (num?: number | string) => {
+  if (!num) return 0
+  const a = num.toString()
+  if (a.indexOf('.') > -1) return a.replace(/(\d)(?=(\d{3})+\.)/g, '$1,')
+  return a.replace(/(\d)(?=(\d{3})+$)/g, '$1,')
+}
 
 // 获取页面路径
 export const getMenuPath = (list: MenuItem[]): string[] => {
@@ -17,8 +26,18 @@ export const getMenuPath = (list: MenuItem[]): string[] => {
   }, []);
 };
 
-// 递归获取路由对象
+/**
+ * 手机号加密
+ * @example
+ * 17611000011 => 176****0011
+ */
+export const formateMobile = (mobile?: number) => {
+  if (!mobile) return '-'
+  const phone = mobile.toString()
+  return phone.replace(/(\d{3})\d*(\d{4})/, '$1****$2')
+}
 
+// 递归获取路由对象
 export const searchRoute: any = (path: string, routes: any = []) => {
   // 确保 routes 是数组
   if (!Array.isArray(routes)) {

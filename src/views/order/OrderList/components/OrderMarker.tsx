@@ -1,9 +1,9 @@
-import { IDetailProp } from '@/types/modal'
 import { Modal } from 'antd'
 import { useImperativeHandle, useState } from 'react'
-import api from '@/api/orderApi'
-import { Order } from '@/types/api'
-import { message } from '@/utils/AntdGlobal'
+import { message } from '@/components/AntdGlobal'
+import { OrderItem } from '@/types/order'
+import { IDetailProp } from '@/types/modal'
+import orderApi from '@/api/order'
 export default function OrderMarker(props: IDetailProp) {
   const [visble, setVisible] = useState(false)
   const [orderId, setOrderId] = useState('')
@@ -19,11 +19,11 @@ export default function OrderMarker(props: IDetailProp) {
   const open = async (orderId: string) => {
     setOrderId(orderId)
     setVisible(true)
-    const detail = await api.getOrderDetail(orderId)
+    const detail = await orderApi.getOrderDetail(orderId)
     renderMap(detail)
   }
   // 渲染地图
-  const renderMap = (detail: Order.OrderItem) => {
+  const renderMap = (detail: OrderItem) => {
     const map = new window.BMapGL.Map('markerMap')
     map.centerAndZoom(detail.cityName, 12)
     var scaleCtrl = new window.BMapGL.ScaleControl() // 添加比例尺控件
@@ -35,6 +35,7 @@ export default function OrderMarker(props: IDetailProp) {
       createMarker(map, item.lng, item.lat)
     })
     // 绑定事件
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     map.addEventListener('click', function (e: any) {
       createMarker(map, e.latlng.lng, e.latlng.lat)
     })
@@ -61,7 +62,7 @@ export default function OrderMarker(props: IDetailProp) {
   }
   // 更新打点
   const handleOk = async () => {
-    await api.updateOrderInfo({
+    await orderApi.updateOrderInfo({
       orderId,
       route: markers
     })

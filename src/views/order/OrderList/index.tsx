@@ -155,10 +155,10 @@ export default function OrderList() {
     orderApi.exportData(form.getFieldsValue())
   }
   return (
-    <div className='OrderList'>
-      <Form className='search-form' form={form} layout='inline'>
+    <div className='OrderListContainer'>
+      <Form className='searchForm' form={form} layout='inline'>
         <Form.Item name='orderId' label='订单ID'>
-          <Input placeholder='请输入用户ID' />
+          <Input placeholder='请输入订单ID' />
         </Form.Item>
         <Form.Item name='userName' label='用户名称'>
           <Input placeholder='请输入用户名称' />
@@ -182,8 +182,8 @@ export default function OrderList() {
           </Space>
         </Form.Item>
       </Form>
-      <div className='base-table'>
-        <div className='header-wrapper'>
+      <div className='baseTable'>
+        <div className='headerWrapper'>
           <div className='title'>用户列表</div>
           <div className='action'>
             <Button type='primary' onClick={handleCreate}>

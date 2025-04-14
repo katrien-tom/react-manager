@@ -1,9 +1,9 @@
 import { IDetailProp } from '@/types/modal'
 import { Modal } from 'antd'
 import { useImperativeHandle, useState } from 'react'
-import api from '@/api/orderApi'
-import { message } from '@/utils/AntdGlobal'
-import { Order } from '@/types/api'
+import orderApi from '@/api/order'
+import { message } from '@/components/AntdGlobal'
+import { OrderItem } from '@/types/order'
 export default function OrderRoute(props: IDetailProp) {
   const [visible, setVisible] = useState(false)
   const [trackAni, setTrackAni] = useState<{
@@ -16,7 +16,7 @@ export default function OrderRoute(props: IDetailProp) {
   })
 
   const open = async (orderId: string) => {
-    const detail = await api.getOrderDetail(orderId)
+    const detail = await orderApi.getOrderDetail(orderId)
     if (detail.route.length > 0) {
       setVisible(true)
       setTimeout(() => {
@@ -27,7 +27,7 @@ export default function OrderRoute(props: IDetailProp) {
     }
   }
 
-  const renderMap = (detail: Order.OrderItem) => {
+  const renderMap = (detail: OrderItem) => {
     const map = new window.BMapGL.Map('orderRouteMap')
     map.enableScrollWheelZoom()
     map.centerAndZoom(detail.cityName, 17)

@@ -1,21 +1,21 @@
 import { IModalProp } from '@/types/modal'
 import { Col, Form, Input, Modal, Row, Select, DatePicker } from 'antd'
 import { useEffect, useImperativeHandle, useState } from 'react'
-import api from '@/api/orderApi'
-import { Order } from '@/types/api'
-import { message } from '@/utils/AntdGlobal'
+import orderApi from '@/api/order'
+import { DictItem } from '@/types/order'
+import { message } from '@/components/AntdGlobal'
 export default function CreateOrder(props: IModalProp) {
   const [visible, setVisible] = useState(false)
   const [form] = Form.useForm()
-  const [cityList, setCityList] = useState<Order.DictItem[]>([])
-  const [vehicleList, setVehicleList] = useState<Order.DictItem[]>([])
+  const [cityList, setCityList] = useState<DictItem[]>([])
+  const [vehicleList, setVehicleList] = useState<DictItem[]>([])
   useEffect(() => {
     getInitData()
   }, [])
   // 初始化城市列表、车型列表
   const getInitData = async () => {
-    const cityList = await api.getCityList()
-    const vehicleList = await api.getVehicleList()
+    const cityList = await orderApi.getCityList()
+    const vehicleList = await orderApi.getVehicleList()
     setCityList(cityList)
     setVehicleList(vehicleList)
   }
@@ -34,7 +34,7 @@ export default function CreateOrder(props: IModalProp) {
   const handleOk = async () => {
     const valid = await form.validateFields()
     if (valid) {
-      await api.createOrder(form.getFieldsValue())
+      await orderApi.createOrder(form.getFieldsValue())
       message.success('创建成功')
       handleCancel()
       props.update()

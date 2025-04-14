@@ -13,3 +13,7 @@ export interface IModalProp<T = UserInfo>  {
   >;
   update: () => void;
 }
+
+export interface IDetailProp {
+  mRef: MutableRefObject<{ open: (orderId: string) => void } | undefined>
+}

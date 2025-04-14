@@ -1,12 +1,12 @@
 import { IDetailProp } from '@/types/modal'
 import { Modal, Descriptions } from 'antd'
 import { useImperativeHandle, useState } from 'react'
-import api from '@/api/orderApi'
-import { Order } from '@/types/api'
-import { formatDate, formatMoney, formateMobile } from '@/utils'
+import orderApi from '@/api/order'
+import { IState, OrderItem } from '@/types/order'
+import { formatMoney, formateMobile } from '@/utils'
 export default function OrderDetail(props: IDetailProp) {
   const [visbile, setVisible] = useState(false)
-  const [detail, setDetail] = useState<Order.OrderItem>()
+  const [detail, setDetail] = useState<OrderItem>()
   useImperativeHandle(props.mRef, () => {
     return {
       open
@@ -16,7 +16,7 @@ export default function OrderDetail(props: IDetailProp) {
   // 打开弹框、暴露方法
   const open = async (orderId: string) => {
     setVisible(true)
-    const detail = await api.getOrderDetail(orderId)
+    const detail = await orderApi.getOrderDetail(orderId)
     setDetail(detail)
   }
 
@@ -26,7 +26,7 @@ export default function OrderDetail(props: IDetailProp) {
   }
 
   // 订单状态格式化
-  const formateState = (state?: Order.IState) => {
+  const formateState = (state?: IState) => {
     if (!state) return '-'
     const stateMap = {
       1: '进行中',
@@ -52,9 +52,9 @@ export default function OrderDetail(props: IDetailProp) {
         <Descriptions.Item label='司机名称'>{detail?.driverName}</Descriptions.Item>
         <Descriptions.Item label='订单车型'>{detail?.vehicleName}</Descriptions.Item>
         <Descriptions.Item label='订单状态'>{formateState(detail?.state)}</Descriptions.Item>
-        <Descriptions.Item label='用车时间'>{formatDate(detail?.useTime)}</Descriptions.Item>
-        <Descriptions.Item label='订单结束时间'>{formatDate(detail?.endTime)}</Descriptions.Item>
-        <Descriptions.Item label='订单创建时间'>{formatDate(detail?.createTime)}</Descriptions.Item>
+        <Descriptions.Item label='用车时间'>{detail?.useTime}</Descriptions.Item>
+        <Descriptions.Item label='订单结束时间'>{detail?.endTime}</Descriptions.Item>
+        <Descriptions.Item label='订单创建时间'>{detail?.createTime}</Descriptions.Item>
       </Descriptions>
     </Modal>
   )

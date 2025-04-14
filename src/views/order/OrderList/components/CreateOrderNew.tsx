@@ -1,9 +1,8 @@
 import { IModalProp } from '@/types/modal'
-import { Col, Form, Input, Modal, Row, Select, DatePicker } from 'antd'
-import { useEffect, useImperativeHandle, useState } from 'react'
-import api from '@/api/orderApi'
-import { Order } from '@/types/api'
-import { message } from '@/utils/AntdGlobal'
+import {Modal} from 'antd'
+import {useImperativeHandle, useState } from 'react'
+import orderApi from '@/api/order'
+import { message } from '@/components/AntdGlobal'
 import FormRender, { useForm } from 'form-render'
 export default function CreateOrder(props: IModalProp) {
   const [visible, setVisible] = useState(false)
@@ -11,8 +10,8 @@ export default function CreateOrder(props: IModalProp) {
 
   // 初始化城市列表、车型列表
   const getInitData = async () => {
-    const cityList = await api.getCityList()
-    const vehicleList = await api.getVehicleList()
+    const cityList = await orderApi.getCityList()
+    const vehicleList = await orderApi.getVehicleList()
     form.setSchema({
       cityName: {
         props: {
@@ -41,7 +40,7 @@ export default function CreateOrder(props: IModalProp) {
   const handleOk = async () => {
     const valid = await form.validateFields()
     if (valid) {
-      await api.createOrder(form.getValues())
+      await orderApi.createOrder(form.getValues())
       message.success('创建成功')
       handleCancel()
       props.update()

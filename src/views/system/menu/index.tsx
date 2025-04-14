@@ -134,7 +134,7 @@ export default function Menu() {
     <div className='menuContainer'>
       <Form className='searchForm' layout='inline' form={form} initialValues={{ menuState: 1 }}>
         <Form.Item label='菜单名称' name='menuName'>
-          <Input placeholder='菜单名称' />
+          <Input placeholder='请输入菜单名称' />
         </Form.Item>
         <Form.Item label='菜单状态' name='menuState'>
           <Select style={{ width: 100 }}>
