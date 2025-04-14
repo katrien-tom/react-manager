@@ -11,7 +11,7 @@ import Dept from '@/views/system/dept';
 import Menu from '@/views/system/menu';
 import Role from '@/views/system/role';
 import AuthLoader from './AuthLoader';
-
+import OrderList from '@/views/order/OrderList';
 const router = [
   {
     path: '/',
@@ -50,6 +50,10 @@ const router = [
       {
         path: '/roleList',
         element: <Role />,
+      },
+      {
+        path: '/orderList',
+        element: <OrderList />,
       },
     ],
   },

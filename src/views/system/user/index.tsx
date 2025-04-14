@@ -9,6 +9,7 @@ import userApi from '@/api/user';
 import CreateUser from './CreateUser';
 import { IAction } from '@/types/modal';
 import { message } from '@/components/AntdGlobal';
+import AuthButton from '@/components/AuthButton';
 export default function User() {
   const [form] = Form.useForm();
   const [userIds, setUserIds] = useState<number[]>([]);
@@ -177,9 +178,9 @@ export default function User() {
         <div className='headerWrapper'>
           <div className='title'>用户列表</div>
           <div className='action'>
-            <Button type='primary' onClick={handleCreate}>
+            <AuthButton auth='user@create' onClick={handleCreate}>
               新增
-            </Button>
+            </AuthButton>
             <Button
               type='primary'
               danger
