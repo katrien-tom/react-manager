@@ -52,3 +52,20 @@ export const searchRoute: any = (path: string, routes: any = []) => {
   }
   return '';
 };
+
+/**
+ * 递归查找树的路径
+ */
+export const findTreeNode = (tree: MenuItem[], pathName: string, path: string[]): string[] => {
+  if (!tree) return []
+  for (const data of tree) {
+    path.push(data.menuName)
+    if (data.path === pathName) return path
+    if (data.children?.length) {
+      const list = findTreeNode(data.children, pathName, path)
+      if (list?.length) return list
+    }
+    path.pop()
+  }
+  return []
+}

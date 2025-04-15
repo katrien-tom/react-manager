@@ -4,16 +4,9 @@ import { Breadcrumb, Dropdown, MenuProps, Switch } from 'antd';
 import { useStore } from '@/store';
 import storage from '@/utils/storage';
 import styles from './index.module.scss';
+import BreadCrumb from './BreadCrumb';
 const NavHeader = () => {
   const { userInfo } = useStore();
-  const breadList = [
-    {
-      title: '首页',
-    },
-    {
-      title: '工作台',
-    },
-  ];
   const dropDownMenu: MenuProps['items'] = [
     {
       key: 'email',
@@ -36,7 +29,7 @@ const NavHeader = () => {
     <div className={styles.navHeader}>
       <div className={styles.navLeft}>
         <MenuFoldOutlined />
-        <Breadcrumb items={breadList} style={{ marginLeft: '10px' }} />
+        <BreadCrumb />
       </div>
       <div className={styles.navRight}>
         <Switch checkedChildren='暗黑' unCheckedChildren='默认' style={{ marginRight: '10px' }} />

@@ -40,6 +40,9 @@ instance.interceptors.response.use(
   response => {
     const data: Result = response.data;
     hideLoading();
+    if (response.config.responseType === 'blob') {
+      return data;
+    }
     if (data.code === 500001) {
       message.error(data.msg);
       storage.remove('token');
@@ -67,5 +70,28 @@ export default {
   },
   post<T>(url: string, params?: object, config: IConfig = { showLoading: true }): Promise<T> {
     return instance.post(url, params, { ...config });
+  },
+  downloadFile(url: string, data: any, fileName = 'fileName.xlsx') {
+    instance({
+      url,
+      data,
+      method: 'post',
+      responseType: 'blob',
+    }).then(response => {
+      const blob = new Blob([response.data], {
+        type: response.data.type,
+      });
+      // 获取文件名，后端在header中设置文件名
+      const name = (response.headers['file-name'] as string) || fileName;
+      const link = document.createElement('a');
+      link.download = decodeURIComponent(name);
+      link.href = URL.createObjectURL(blob);
+      document.body.append(link);
+      link.click();
+      // 移除DOM对象
+      document.body.removeChild(link);
+      // 释放URL对象，不释放会导致内存泄漏
+      window.URL.revokeObjectURL(link.href);
+    });
   },
 };

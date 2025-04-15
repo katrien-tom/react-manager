@@ -151,8 +151,8 @@ export default function DriverList() {
     form.resetFields()
   }
   return (
-    <div className='driver-list'>
-      <Form className='search-form' layout='inline' form={form}>
+    <div className='driverListContainer'>
+      <Form className='searchForm' layout='inline' form={form}>
         <Form.Item name='driverName' label='司机名称'>
           <Input placeholder='请输入司机名称' />
         </Form.Item>
@@ -176,11 +176,11 @@ export default function DriverList() {
           </Space>
         </Form.Item>
       </Form>
-      <div className='base-table'>
-        <div className='header-wrapper'>
+      <div className='baseTable'>
+        <div className='headerWrapper'>
           <div className='title'>司机列表</div>
         </div>
-        <Table bordered rowKey='_id' columns={columns} dataSource={data} pagination={false} scroll={{ x: 1300 }} />
+        <Table bordered rowKey='driverId' columns={columns} dataSource={data} pagination={false} scroll={{ x: 1300 }} />
       </div>
     </div>
   )

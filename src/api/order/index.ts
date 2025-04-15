@@ -32,7 +32,7 @@ export default {
     return request.post('/order/delete', { _id: orderId });
   },
   exportData(params: SearchParams) {
-    // return request.downloadFile('/order/orderExport', params, '订单列表.xlsx');
+    return request.downloadFile('/order/orderExport', params, '订单列表.xlsx');
   },
   // 获取城市聚合点数据
   getCityData(cityId: number) {
