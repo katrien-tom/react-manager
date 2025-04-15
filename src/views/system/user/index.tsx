@@ -10,6 +10,7 @@ import CreateUser from './CreateUser';
 import { IAction } from '@/types/modal';
 import { message } from '@/components/AntdGlobal';
 import AuthButton from '@/components/AuthButton';
+import SearchForm from '@/components/SearchForm';
 export default function User() {
   const [form] = Form.useForm();
   const [userIds, setUserIds] = useState<number[]>([]);
@@ -148,7 +149,7 @@ export default function User() {
   ];
   return (
     <div className='userContainer'>
-      <Form className='searchForm' layout='inline' form={form}>
+      <SearchForm form={form} submit={search.submit} reset={search.reset} layout='inline'>
         <Form.Item label='用户ID' name='userId'>
           <Input placeholder='请输入用户名' />
         </Form.Item>
@@ -163,17 +164,7 @@ export default function User() {
             <Select.Option value={3}>试用期</Select.Option>
           </Select>
         </Form.Item>
-        <Form.Item>
-          <Space>
-            <Button type='primary' onClick={search.submit}>
-              搜索
-            </Button>
-            <Button type='default' onClick={search.reset}>
-              重置
-            </Button>
-          </Space>
-        </Form.Item>
-      </Form>
+      </SearchForm>
       <div className='baseTable'>
         <div className='headerWrapper'>
           <div className='title'>用户列表</div>
@@ -185,7 +176,7 @@ export default function User() {
               type='primary'
               danger
               onClick={() => {
-                handleBatchDeleteConfirm;
+                handleBatchDeleteConfirm();
               }}
             >
               批量删除

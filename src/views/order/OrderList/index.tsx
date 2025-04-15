@@ -4,11 +4,11 @@ import orderApi from '@/api/order'
 import { ColumnsType } from 'antd/es/table'
 import { OrderItem, SearchParams } from '@/types/order'
 import { useRef } from 'react'
-import CreateOrder from './components/CreateOrderNew'
 import OrderDetail from './components/OrderDetail'
 import OrderMarker from './components/OrderMarker'
 import OrderRoute from './components/OrderRoute'
 import { message } from '@/components/AntdGlobal'
+import CreateOrderNew from './components/CreateOrderNew'
 export default function OrderList() {
   const [form] = Form.useForm()
   const orderRef = useRef<{ open: () => void }>()
@@ -197,7 +197,7 @@ export default function OrderList() {
         <Table bordered rowKey='_id' columns={columns} {...tableProps} />
       </div>
       {/* 创建订单组件 */}
-      <CreateOrder mRef={orderRef} update={search.submit} />
+      <CreateOrderNew mRef={orderRef} update={search.submit} />
       {/* 订单详情 */}
       <OrderDetail mRef={detailRef} />
       {/* 地图打点 */}

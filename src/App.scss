@@ -11,16 +11,16 @@ body,
   height: 100%;
 }
 .searchForm {
-  background-color: #fff;
+  background-color: var(--dark-bg-color);
   padding: 20px;
   border-radius: 5px;
-  color: #000;
+  color: var(--dark-color);
 }
 
 .baseTable {
-  background-color: #fff;
+  background-color: var(--dark-bg-color);
   border-radius: 5px;
-  color: #000;
+  color: var(--dark-color);
   .headerWrapper {
     display: flex;
     justify-content: space-between;

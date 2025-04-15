@@ -12,7 +12,7 @@ import styles from './index.module.scss';
 import { IAuthLoader } from '@/router/AuthLoader';
 import { searchRoute } from '@/utils';
 import router from '@/router/index';
-
+import TabsFC from '@/components/TabsFC';
 const { Sider } = Layout;
 
 const App: React.FC = () => {
@@ -43,6 +43,7 @@ const App: React.FC = () => {
   return (
     <div className='layoutContainer'>
       <Watermark content='Ant Design'>
+        {/* 会被执行多次，所以需要优化 */}
         {userInfo._id ? (
           <Layout>
             <Sider collapsed={collapsed}>
@@ -50,6 +51,7 @@ const App: React.FC = () => {
             </Sider>
             <Layout>
               <NavHeader />
+              <TabsFC />
               <div className={styles.content}>
                 <div className={styles.wrapper}>
                   <Outlet></Outlet>

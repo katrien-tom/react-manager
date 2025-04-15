@@ -1,12 +1,15 @@
-import {RouterProvider } from 'react-router-dom';
+import { RouterProvider } from 'react-router-dom';
 
-import { ConfigProvider, App as AntdApp } from 'antd';
+import { ConfigProvider, App as AntdApp, theme } from 'antd';
 
 import router from './router';
 import AntdGlobal from '@/components/AntdGlobal';
+import './style/theme.scss';
 import './App.scss';
+import { useStore } from '@/store';
 
 function App() {
+  const { isDark } = useStore();
   return (
     <>
       <ConfigProvider
@@ -14,6 +17,7 @@ function App() {
           token: {
             colorPrimary: '#ed6c00',
           },
+          algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
         }}
       >
         <AntdApp>

@@ -9,6 +9,7 @@ interface LocalState {
   updateToken: (token: string) => void;
   updateUserInfo: (userInfo: UserInfo) => void;
   updateCollapsed: () => void;
+  updateTheme: (isDark: boolean) => void;
 }
 export const useStore = create<LocalState>(set => ({
   token: '',
@@ -29,6 +30,7 @@ export const useStore = create<LocalState>(set => ({
   },
   collapsed: false,
   isDark: storage.get('isDark') || false,
+  updateTheme: (isDark: boolean) => set({ isDark }),
   updateToken: token => set({ token }),
   updateUserInfo: (userInfo: UserInfo) => set({ userInfo }),
   updateCollapsed: () =>

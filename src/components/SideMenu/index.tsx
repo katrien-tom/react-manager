@@ -79,7 +79,7 @@ const SideMenu = () => {
       </div>
       <Menu
         mode='inline'
-        theme={isDark ? 'dark' : 'light'}
+        theme={isDark ? 'light' : 'dark'}
         style={{
           width: collapsed ? 80 : 'auto',
           height: 'calc(100vh - 50px)',
